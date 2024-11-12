@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,11 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
 
         notesContainer = findViewById(R.id.notesContainer);
         Button saveButton = findViewById(R.id.saveButton);
@@ -45,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 saveNote();
             }
         });
+
         loadNotesFromPreferences();
         displayNotes();
-
     }
 
     private void displayNotes() {
@@ -57,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNotesFromPreferences() {
-        SharedPreferences sharedPreferences;
-        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         int noteCount = sharedPreferences.getInt(KEY_NOTE_COUNT, 0);
 
         for (int i = 0; i < noteCount; i++) {
@@ -77,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         EditText contentEditText = findViewById(R.id.contentEditText);
 
         String title = titleEditText.getText().toString();
-        String content = titleEditText.getText().toString();
+        String content = contentEditText.getText().toString();
+
         if (!title.isEmpty() && !content.isEmpty()) {
             Note note = new Note();
             note.setTitle(title);
@@ -87,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             saveNotesToPreferences();
             createNoteView(note);
             clearInputFields();
+            Toast.makeText(getBaseContext(), "Note saved successfully!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -122,9 +119,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteNoteAndRefresh(note);
+                Toast.makeText(getBaseContext(), "Note deleted successfully!", Toast.LENGTH_LONG).show();
+
             }
         });
         builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     private void deleteNoteAndRefresh(Note note) {
@@ -138,10 +138,8 @@ public class MainActivity extends AppCompatActivity {
         displayNotes();
     }
 
-
     private void saveNotesToPreferences() {
-        SharedPreferences sharedPreferences;
-        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putInt(KEY_NOTE_COUNT, noteList.size());
@@ -151,6 +149,5 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("note_content_" + i, note.getContent());
         }
         editor.apply();
-
     }
 }
