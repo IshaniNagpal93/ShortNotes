@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             noteList.add(note);
         }
     }
+
     private void saveNote() {
         EditText titleEditText = findViewById(R.id.titleEditText);
         EditText contentEditText = findViewById(R.id.contentEditText);
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             clearInputFields();
         }
     }
+
     private void clearInputFields() {
         EditText titleEditText = findViewById(R.id.titleEditText);
         EditText contentEditText = findViewById(R.id.contentEditText);
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         titleEditText.getText().clear();
         contentEditText.getText().clear();
     }
+
     private void createNoteView(final Note note) {
         View noteView = getLayoutInflater().inflate(R.layout.note_item, null);
         TextView titleTextView = noteView.findViewById(R.id.titleTextView);
